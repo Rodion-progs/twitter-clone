@@ -7,21 +7,26 @@ import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import EmojiIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button/Button';
-import {useHomeStyle} from '../../pages/Home';
+import { useHomeStyle } from '../../pages/Home/theme';
 
 
 interface AddTweetFormProps {
     classes: ReturnType<typeof useHomeStyle>;
+    rowsMax?: number
 }
 
-export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes}: AddTweetFormProps): React.ReactElement => {
+export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes, rowsMax}: AddTweetFormProps): React.ReactElement => {
     const [text, setText] = useState<string>('');
-    const textLimit = 280;
-    const textLimitPecent = text.length / textLimit * 100;
+    const MAX_LENGTH = 280;
+    const textLimitPercent = text.length / MAX_LENGTH * 100;
+    const textCount = MAX_LENGTH - text.length;
     const handleChangeTextarea = (e: React.FormEvent<HTMLTextAreaElement>) => {
-        if (e.currentTarget && textLimitPecent) {
+        if (e.currentTarget) {
             setText(e.currentTarget.value)
         }
+    }
+    const handleClickAddTweet = (): void => {
+      setText('')
     }
     return (
         <div className={classes.addForm}>
@@ -36,6 +41,7 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes}: AddTweetFor
                     className={classes.addFormTextarea}
                     placeholder="Что происходит?"
                     value={text}
+                    rowsMax={rowsMax}
                 />
             </div>
             <div className={classes.addFormBottom}>
@@ -52,15 +58,15 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes}: AddTweetFor
                     </IconButton>
                 </div>
                 <div className={classes.addFormBottomRight}>
-                    {text &&  <>
-                        <span>{text.lenght}</span>
+                    {text && (<>
+                        <span>{ textCount }</span>
                         <div className={classes.addFormCircleProgress}>
                           <CircularProgress
                             variant="static"
                             size={20}
                             thickness={5}
-                            value={textLimitPecent}
-                            style={ textLimitPecent >= 100 ?  {color: 'red'} : undefined}
+                            value={textLimitPercent > 100 ? 100 : textLimitPercent}
+                            style={ textLimitPercent > 100 ?  {color: 'red'} : undefined}
 
                           />
                           <CircularProgress
@@ -71,9 +77,9 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes}: AddTweetFor
                             value={100}
                           />
                         </div>
-                    </>
+                    </>)
                     }
-                    <Button color="primary" variant="contained">Твитнуть</Button>
+                    <Button onClick={handleClickAddTweet} disabled={textLimitPercent > 100} color="primary" variant="contained">Твитнуть</Button>
                 </div>
             </div>
         </div>
