@@ -53,7 +53,7 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes}: AddTweetFor
                 </div>
                 <div className={classes.addFormBottomRight}>
                     {text &&  <>
-                        <span>{text.lenght}</span>
+                        <span>{text.length}</span>
                         <div className={classes.addFormCircleProgress}>
                           <CircularProgress
                             variant="static"
