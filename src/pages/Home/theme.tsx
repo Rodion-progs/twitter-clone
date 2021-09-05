@@ -16,7 +16,6 @@ export const useHomeStyle = makeStyles((theme: Theme) => ({
         listStyle: 'none',
         padding: 0,
         margin: 0,
-        maxWidth: 230,
     },
     sideMenuListItem: {
         display: 'flex',
@@ -60,6 +59,14 @@ export const useHomeStyle = makeStyles((theme: Theme) => ({
         width: theme.spacing(6.5),
         height: theme.spacing(6.5),
         marginRight: 15,
+    },
+    tweetWrapperLink: {
+        color: 'inherit',
+        textDecoration: 'none'
+    },
+    tweetsCentered: {
+        marginTop: 50,
+        textAlign: 'center'
     },
     tweetWrapper: {
         height: '100%',
@@ -129,6 +136,10 @@ export const useHomeStyle = makeStyles((theme: Theme) => ({
         },
         '&:hover': {
             backgroundColor: '#edf3f6',
+        },
+        '& a': {
+           color: 'inherit',
+           textDecoration: 'none',
         }
     },
     addForm: {

@@ -29,7 +29,7 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes, rowsMax}: Ad
       setText('')
     }
     return (
-        <div className={classes.addForm}>
+        <div>
             <div className={classes.addFormBody}>
                 <Avatar
                     className={classes.tweetAvatar}

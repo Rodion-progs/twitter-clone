@@ -14,14 +14,14 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {ModalBlock} from "./ModalBlock";
 import {AddTweetForm} from "./Tweet/AddTweetForm";
-
+import {Link} from 'react-router-dom';
 
 interface SideMenuProps {
     classes: ReturnType<typeof useHomeStyle>
 }
 
 export const SideMenu: React.FC<SideMenuProps> = ({classes}: SideMenuProps): React.ReactElement => {
-    
+
     const [visibleAddTweet, setVisibleAddTweet] = useState(false);
     const onCloseAddTweet = () => {
       setVisibleAddTweet(false);
@@ -34,9 +34,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({classes}: SideMenuProps): Rea
     return (
         <ul className={classes.sideMenuList}>
             <li>
-                <IconButton color="primary" className={classes.logo}>
-                    <TwitterIcon className={classes.logoIcon}/>
-                </IconButton>
+                <Link to="/home">
+                    <IconButton color="primary" className={classes.logo}>
+                        <TwitterIcon className={classes.logoIcon}/>
+                    </IconButton>
+                </Link>
             </li>
             <li className={classes.sideMenuListItem}>
                 <SearchIcon className={classes.sideMenuListIcon}/>
@@ -90,7 +92,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({classes}: SideMenuProps): Rea
                     </Hidden>
                 </Button>
                 <ModalBlock onClose={onCloseAddTweet} visible={visibleAddTweet} title="">
-                    <div style={{width: '100%', maxWidth: 550}}>
+                    <div style={{width: 550, maxWidth: '100%'}}>
                         <AddTweetForm rowsMax={15} classes={classes}/>
                     </div>
                 </ModalBlock>
@@ -98,4 +100,5 @@ export const SideMenu: React.FC<SideMenuProps> = ({classes}: SideMenuProps): Rea
 
         </ul>
     )
-}
+};
+

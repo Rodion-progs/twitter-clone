@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Typography, Container, Grid, InputAdornment, Paper,} from '@material-ui/core/'
 import SearchIcon from '@material-ui/icons/SearchOutlined';
 import PersonAddIcon from '@material-ui/icons/PersonAddOutlined';
@@ -14,10 +14,21 @@ import { SideMenu } from '../../components/SideMenu';
 import { AddTweetForm } from '../../components/Tweet/AddTweetForm';
 import { useHomeStyle } from './theme';
 import {SearchTextField} from "../../components/SearchTextField";
-
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchTweets} from '../../store/ducks/tweets/actionCreators';
+import {selectIsTweetsLoading, selectTweetsItems} from '../../store/ducks/tweets/selectors';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { Tags } from '../../components/Tags';
+import {Route} from 'react-router';
 
 export const Home = (): React.ReactElement => {
     const classes = useHomeStyle();
+    const dispatch = useDispatch()
+    const tweets = useSelector(selectTweetsItems)
+    const isLoading = useSelector(selectIsTweetsLoading)
+    useEffect(() => {
+        dispatch(fetchTweets());
+    }, [dispatch])
 
     return (
         <Container className={classes.wrapper} maxWidth="lg">
@@ -27,26 +38,40 @@ export const Home = (): React.ReactElement => {
                 </Grid>
                 <Grid item sm={8} md={6}>
                     <Paper className={classes.tweetWrapper} variant="outlined">
-                        <Paper className={classes.tweetHeader} variant="outlined">
-                            <Typography className={classes.tweetHeaderTitle} variant="h6">Главная</Typography>
-                        </Paper>
-                        <Paper>
-                            <AddTweetForm classes={classes} />
-                            <div className={classes.addFormBottomLine} />
-                        </Paper>
-                        {
-                            [...new Array(20).fill(
-                                <Tweet
-                                classes={classes}
-                                text="Текст — зафиксированная на каком-либо материальном носителе человеческая мысль; в общем плане связная и полная последовательность символов."
-                                user={{
-                                    fullname: "Имя фамилия",
-                                    username: "Ник",
-                                    avatarUrl: "https://images.unsplash.com/photo-1622984543976-ae57a77ccb2a",
-                                }}
-                            />
-                            )]
-                        }
+                        <Route path={['/home', '/home/search']} exact>
+                            <Paper className={classes.tweetHeader} variant="outlined">
+                                <Typography className={classes.tweetHeaderTitle} variant="h6">Твиты</Typography>
+                            </Paper>
+                        </Route>
+                        <Route path="/home/tweet">
+                            <Paper className={classes.tweetHeader} variant="outlined">
+                                <Typography className={classes.tweetHeaderTitle} variant="h6">Твиты 2</Typography>
+                            </Paper>
+                        </Route>
+                        <Route path={['/home', '/home/search']} exact>
+                           <Paper>
+                               <div className={classes.addForm}>
+                                   <AddTweetForm classes={classes} />
+                               </div>
+                               <div className={classes.addFormBottomLine} />
+                           </Paper>
+                        </Route>
+                        <Route path="/home" exact>
+                            { isLoading ? (
+                                    <div className={classes.tweetsCentered}>
+                                        <CircularProgress />
+                                    </div>
+                                ) :
+                                tweets.map(tweet =>
+                                    <Tweet
+                                        key={tweet._id}
+                                        _id={tweet._id}
+                                        classes={classes}
+                                        text={tweet.text}
+                                        user={tweet.user}
+                                    />
+                                )}
+                        </Route>
                     </Paper>
 
 
@@ -58,57 +83,14 @@ export const Home = (): React.ReactElement => {
                             fullWidth
                             placeholder="Поиск по Твиттеру"
                             inputProps={{
-                                startAdornment: (
+                                startadornment: (
                                     <InputAdornment position="start">
                                         <SearchIcon />
                                     </InputAdornment>
                                 )
                             }}
                         />
-                        <Paper className={classes.rightSideBlock}>
-                            <Paper className={classes.rightSideBlockHeader} variant="outlined">
-                                <b>Актуальные темы</b>
-                            </Paper>
-                            <List>
-                                <ListItem className={classes.rightSideBlockItem}>
-                                    <ListItemText
-                                        primary="Санкт-Петербург"
-                                        secondary={
-                                            <Typography component="span" variant="body2">
-                                                Твитов: 3 331
-                                            </Typography>
-                                        }
-                                    >
-                                    </ListItemText>
-                                </ListItem>
-                                <Divider component="li" />
-                                <ListItem className={classes.rightSideBlockItem}>
-                                    <ListItemText
-                                        primary="#коронавирус"
-                                        secondary={
-                                            <Typography component="span" variant="body2">
-                                                Твитов: 143 356
-                                            </Typography>
-                                        }
-                                    >
-                                    </ListItemText>
-                                </ListItem>
-                                <Divider component="li" />
-                                <Divider component="li" />
-                                <ListItem className={classes.rightSideBlockItem}>
-                                    <ListItemText
-                                        primary="Россия"
-                                        secondary={
-                                            <Typography component="span" variant="body2">
-                                                Твитов: 143 356
-                                            </Typography>
-                                        }
-                                    >
-                                    </ListItemText>
-                                </ListItem>
-                                <Divider component="li" />
-                            </List>
-                        </Paper>
+                        <Tags classes={classes} />
                         <Paper className={classes.rightSideBlock}>
                             <Paper className={classes.rightSideBlockHeader} variant="outlined">
                                 <b>Кого читать</b>
@@ -118,7 +100,7 @@ export const Home = (): React.ReactElement => {
                                     <ListItemAvatar>
                                         <Avatar
                                             alt="Аватарка"
-                                            src="https://images.unsplash.com/photo-1622984543976-ae57a77ccb2a"
+                                            src="https://source.unsplash.com/random/100x100?3"
                                         />
                                     </ListItemAvatar>
                                     <ListItemText
@@ -137,8 +119,6 @@ export const Home = (): React.ReactElement => {
                             </List>
                         </Paper>
                     </div>
-
-
                 </Grid>
             </Grid>
         </Container>

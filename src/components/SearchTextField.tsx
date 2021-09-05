@@ -1,4 +1,3 @@
-import React from 'react';
 import { Theme, withStyles } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField/TextField';
 
