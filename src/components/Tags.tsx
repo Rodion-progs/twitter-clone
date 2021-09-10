@@ -6,8 +6,8 @@ import Divider from '@material-ui/core/Divider';
 import React, {useEffect} from 'react';
 import {useHomeStyle} from '../pages/Home/theme';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectIsTagsLoaded, selectTagsItems} from '../store/tags/selectors';
-import {fetchTags} from '../store/tags/actionCreators';
+import {selectIsTagsLoaded, selectTagsItems} from '../store/ducks/tags/selectors';
+import {fetchTags} from '../store/ducks/tags/actionCreators';
 import {Link} from 'react-router-dom';
 
 interface TagsProps {

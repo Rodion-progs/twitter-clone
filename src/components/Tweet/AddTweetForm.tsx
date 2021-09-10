@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import classNames from 'classnames';
-import {IconButton} from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import EmojiIcon from '@material-ui/icons/SentimentSatisfiedOutlined';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button/Button';
 import { useHomeStyle } from '../../pages/Home/theme';
+import { useDispatch } from "react-redux";
+import { fetchAddTweet } from "../../store/ducks/tweets/actionCreators";
 
 
 interface AddTweetFormProps {
@@ -16,6 +18,7 @@ interface AddTweetFormProps {
 }
 
 export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes, rowsMax}: AddTweetFormProps): React.ReactElement => {
+    const dispatch = useDispatch();
     const [text, setText] = useState<string>('');
     const MAX_LENGTH = 280;
     const textLimitPercent = text.length / MAX_LENGTH * 100;
@@ -26,7 +29,8 @@ export const AddTweetForm: React.FC<AddTweetFormProps> = ({classes, rowsMax}: Ad
         }
     }
     const handleClickAddTweet = (): void => {
-      setText('')
+        dispatch(fetchAddTweet(text))
+        setText('')
     }
     return (
         <div>

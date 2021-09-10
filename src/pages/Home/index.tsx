@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Typography, Container, Grid, InputAdornment, Paper,} from '@material-ui/core/'
+import {Typography, Container, Grid, InputAdornment, Paper } from '@material-ui/core/'
 import SearchIcon from '@material-ui/icons/SearchOutlined';
 import PersonAddIcon from '@material-ui/icons/PersonAddOutlined';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,12 +14,16 @@ import { SideMenu } from '../../components/SideMenu';
 import { AddTweetForm } from '../../components/Tweet/AddTweetForm';
 import { useHomeStyle } from './theme';
 import {SearchTextField} from "../../components/SearchTextField";
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchTweets} from '../../store/ducks/tweets/actionCreators';
-import {selectIsTweetsLoading, selectTweetsItems} from '../../store/ducks/tweets/selectors';
+import {Route} from "react-router-dom";
+import {BackButton} from "../../components/BackButton";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Tags } from '../../components/Tags';
-import {Route} from 'react-router';
+import {Tags} from "../../components/Tags";
+import {useDispatch, useSelector} from "react-redux";
+import {selectIsTweetsLoading, selectTweetsItems} from "../../store/ducks/tweets/selectors";
+import { fetchTweets } from '../../store/ducks/tweets/actionCreators';
+import {FullTweet} from "./components/FullTweet";
+import {fetchTags} from "../../store/ducks/tags/actionCreators";
+
 
 export const Home = (): React.ReactElement => {
     const classes = useHomeStyle();
@@ -28,6 +32,7 @@ export const Home = (): React.ReactElement => {
     const isLoading = useSelector(selectIsTweetsLoading)
     useEffect(() => {
         dispatch(fetchTweets());
+        dispatch(fetchTags());
     }, [dispatch])
 
     return (
@@ -38,23 +43,24 @@ export const Home = (): React.ReactElement => {
                 </Grid>
                 <Grid item sm={8} md={6}>
                     <Paper className={classes.tweetWrapper} variant="outlined">
+                        <Paper className={classes.tweetHeader} variant="outlined">
+                            <Route path='/home/:any'>
+                                <BackButton />
+                            </Route>
+                            <Route path={['/home', '/home/search']} exact>
+                                <Typography variant='h6'>Твиты</Typography>
+                            </Route>
+                            <Route path='/home/tweet'>
+                                <Typography variant='h6'>Твитнуть</Typography>
+                            </Route>
+                        </Paper>
                         <Route path={['/home', '/home/search']} exact>
-                            <Paper className={classes.tweetHeader} variant="outlined">
-                                <Typography className={classes.tweetHeaderTitle} variant="h6">Твиты</Typography>
+                            <Paper>
+                                <div className={classes.addForm}>
+                                    <AddTweetForm classes={classes} />
+                                </div>
+                                <div className={classes.addFormBottomLine} />
                             </Paper>
-                        </Route>
-                        <Route path="/home/tweet">
-                            <Paper className={classes.tweetHeader} variant="outlined">
-                                <Typography className={classes.tweetHeaderTitle} variant="h6">Твиты 2</Typography>
-                            </Paper>
-                        </Route>
-                        <Route path={['/home', '/home/search']} exact>
-                           <Paper>
-                               <div className={classes.addForm}>
-                                   <AddTweetForm classes={classes} />
-                               </div>
-                               <div className={classes.addFormBottomLine} />
-                           </Paper>
                         </Route>
                         <Route path="/home" exact>
                             { isLoading ? (
@@ -72,9 +78,8 @@ export const Home = (): React.ReactElement => {
                                     />
                                 )}
                         </Route>
+                        <Route path="/home/tweet/:id" component={FullTweet} exact />
                     </Paper>
-
-
                 </Grid>
                 <Grid item sm={3} md={3}>
                     <div className={classes.rightSide}>

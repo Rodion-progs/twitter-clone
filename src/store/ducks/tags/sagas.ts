@@ -1,6 +1,6 @@
 import {call, takeLatest, put} from 'redux-saga/effects';
 import {setTags, setTagsLoadingState, TagsActionType} from './actionCreators';
-import {TagsApi} from '../../services/api/tagsApi';
+import {TagsApi} from '../../../services/api/tagsApi';
 import {LoadingState} from './contracts/state';
 
 
